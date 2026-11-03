@@ -2,6 +2,7 @@
 """Приёмка недели 4: NL → week3 + catalog + product_card + price_quote, status=done."""
 from __future__ import annotations
 
+import os
 import re
 import sqlite3
 import subprocess
@@ -22,7 +23,11 @@ def _force_utf8_stdio() -> None:
 _force_utf8_stdio()
 
 ROOT = Path(__file__).resolve().parent.parent
-PY = ROOT / ".venv" / "bin" / "python"
+# Cross-platform venv interpreter (Windows: Scripts\python.exe, POSIX: bin/python)
+if os.name == "nt":
+    PY = ROOT / ".venv" / "Scripts" / "python.exe"
+else:
+    PY = ROOT / ".venv" / "bin" / "python"
 DB = ROOT / "data" / "projects.db"
 GOAL = "Разработай люстру Baccarat Ø1200 H900 24 лампы латунь+хрусталь"
 
