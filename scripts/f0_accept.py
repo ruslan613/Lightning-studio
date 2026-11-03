@@ -15,6 +15,19 @@ import sys
 import tempfile
 from pathlib import Path
 
+def _force_utf8_stdio() -> None:
+    """Avoid UnicodeEncodeError when printing Cyrillic on Windows cp1252 consoles."""
+    for stream in (sys.stdout, sys.stderr):
+        reconf = getattr(stream, "reconfigure", None)
+        if callable(reconf):
+            try:
+                reconf(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
+
+_force_utf8_stdio()
+
 ROOT = Path(__file__).resolve().parent.parent
 PY = ROOT / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
 GOAL = "Разработай люстру Baccarat Ø1200 H900 24 лампы латунь+хрусталь"
