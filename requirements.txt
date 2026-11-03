@@ -4,3 +4,4 @@ pypdf
 Pillow
 matplotlib
 openpyxl
+opencv-python-headless
