@@ -45,6 +45,11 @@ POST_APPROVAL: list[tuple[str, str]] = [
     ("visualization", "render"),
     ("automation", "make_rfq"),
     ("automation", "update_catalog"),
+    # коммерческий финал (как week4) — полный цикл до карточки/котировки
+    ("catalogs", "build_catalog_table"),
+    ("catalogs", "site_fragment"),
+    ("sales", "product_card"),
+    ("sales", "price_quote"),
 ]
 
 # week2: идея → ТЗ → 3D-спека

@@ -22,8 +22,21 @@ def _force_utf8_stdio() -> None:
 _force_utf8_stdio()
 
 ROOT = Path(__file__).resolve().parent.parent
-PY = ROOT / ".venv" / "bin" / "python"
-DB = ROOT / "data" / "projects.db"
+
+def _data_dir() -> Path:
+    """Respect ALS_DATA_DIR the same way shared.store does."""
+    import os
+    env = os.environ.get("ALS_DATA_DIR")
+    return Path(env) if env else ROOT / "data"
+
+
+def _venv_python() -> Path:
+    import os
+    return ROOT / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+
+PY = _venv_python()
+DATA_DIR = _data_dir()
+DB = DATA_DIR / "projects.db"
 GOAL = "Разработай люстру Baccarat Ø1200 H900 24 лампы латунь+хрусталь"
 
 
@@ -41,6 +54,7 @@ def main() -> int:
         GOAL,
         "--week3",
     ]
+    print(f"data_dir={DATA_DIR}")
     print("=== CLI week3 ===")
     print(" ".join(cmd))
     proc = subprocess.run(
@@ -81,7 +95,7 @@ def main() -> int:
         "preview": None,
     }
     if project_id:
-        base = ROOT / "data" / "projects" / project_id
+        base = DATA_DIR / "projects" / project_id
         paths["design_brief"] = base / "design" / "design_brief.json"
         paths["geometry"] = base / "cad3d" / "geometry.json"
         paths["eng_json"] = base / "engineering" / "engineering_report.json"

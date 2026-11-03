@@ -28,6 +28,10 @@
 5. `engineering.build_spec` — паспорт  
 6. `visualization.render`  
 7. `automation.make_rfq` → `automation.update_catalog`
+8. `catalogs.build_catalog_table` + `site_fragment` → `sales.product_card` + `price_quote`
+
+Полный цикл (без `--weekN`): verify + DXF/паспорт/рендер/RFQ **и** каталог/продажи.
+Приёмка: `scripts/full_accept.py` → `ACCEPT_FULL=PASS`.
 
 **Неделя 2:** `python -m orchestrator.cli run "…" --week2` — design → cad3d → `done`. Приёмка: `scripts/week2_accept.py`.
 

@@ -4,7 +4,9 @@ set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 PY="${ROOT}/.venv/bin/python"
-DB="${ROOT}/data/projects.db"
+DATA_DIR="${ALS_DATA_DIR:-${ROOT}/data}"
+DB="${DATA_DIR}/projects.db"
+echo "data_dir=${DATA_DIR}"
 PASS=1
 
 echo "=== [1] python -m orchestrator.orchestrator ==="

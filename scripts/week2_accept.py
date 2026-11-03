@@ -22,8 +22,21 @@ def _force_utf8_stdio() -> None:
 _force_utf8_stdio()
 
 ROOT = Path(__file__).resolve().parent.parent
-PY = ROOT / ".venv" / "bin" / "python"
-DB = ROOT / "data" / "projects.db"
+
+def _data_dir() -> Path:
+    """Respect ALS_DATA_DIR the same way shared.store does."""
+    import os
+    env = os.environ.get("ALS_DATA_DIR")
+    return Path(env) if env else ROOT / "data"
+
+
+def _venv_python() -> Path:
+    import os
+    return ROOT / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+
+PY = _venv_python()
+DATA_DIR = _data_dir()
+DB = DATA_DIR / "projects.db"
 GOAL = "Разработай люстру Baccarat Ø1200 H900 24 лампы латунь+хрусталь"
 
 
@@ -41,6 +54,7 @@ def main() -> int:
         GOAL,
         "--week2",
     ]
+    print(f"data_dir={DATA_DIR}")
     print("=== CLI week2 ===")
     print(" ".join(cmd))
     proc = subprocess.run(
@@ -74,8 +88,8 @@ def main() -> int:
     brief_path = None
     geom_path = None
     if project_id:
-        brief_path = ROOT / "data" / "projects" / project_id / "design" / "design_brief.json"
-        geom_path = ROOT / "data" / "projects" / project_id / "cad3d" / "geometry.json"
+        brief_path = DATA_DIR / "projects" / project_id / "design" / "design_brief.json"
+        geom_path = DATA_DIR / "projects" / project_id / "cad3d" / "geometry.json"
         if not brief_path.is_file():
             ok = False
             reasons.append(f"missing {brief_path}")
