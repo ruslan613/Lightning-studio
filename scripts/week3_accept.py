@@ -47,7 +47,7 @@ def main() -> int:
         cmd,
         cwd=str(ROOT),
         capture_output=True,
-        text=True,
+        text=True, encoding="utf-8", errors="replace",
     )
     out = (proc.stdout or "") + (("\n" + proc.stderr) if proc.stderr else "")
     print(out)

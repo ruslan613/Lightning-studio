@@ -44,7 +44,7 @@ class Backend:
     def __init__(self, env: dict) -> None:
         self.p = subprocess.Popen([str(PY), "-u", "-m", "app"], cwd=ROOT, env=env, text=True,
                                   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-                                  encoding="utf-8")
+                                  encoding="utf-8", errors="replace")
         self.n = 0
         ready = json.loads(self.p.stdout.readline())
         assert ready.get("event") == "ready", ready
@@ -145,9 +145,9 @@ def main() -> int:
         b.close()
 
     print("=== 5. CLI python -m projects ===")
-    r = subprocess.run([str(PY), "-m", "projects", "log", pid], cwd=ROOT, env=env, capture_output=True, text=True)
+    r = subprocess.run([str(PY), "-m", "projects", "log", pid], cwd=ROOT, env=env, capture_output=True, text=True, encoding="utf-8", errors="replace")
     check(r.returncode == 0 and len(json.loads(r.stdout)) >= 3, "CLI log")
-    r = subprocess.run([str(PY), "-m", "projects", "diff", pid, "v1", "v2"], cwd=ROOT, env=env, capture_output=True, text=True)
+    r = subprocess.run([str(PY), "-m", "projects", "diff", pid, "v1", "v2"], cwd=ROOT, env=env, capture_output=True, text=True, encoding="utf-8", errors="replace")
     check(r.returncode == 0 and "design/design_brief.json" in r.stdout, "CLI diff v1 v2")
 
     ok = not fails
