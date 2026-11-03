@@ -83,4 +83,4 @@ UI: вкладка **«Версии»** (история, «Сохранить в
 Приёмка: `.venv/bin/python scripts/f0_accept.py` → `ACCEPT_F0_PROJECTS=PASS`.
 
 **Установщик:** `desktop/installer/als.iss` (Inno Setup 6: Program Files, ярлыки меню Пуск/рабочего стола, деинсталлятор, RU+EN, иконка, ассоциация .alsproj; данные — `%APPDATA%\AI Lighting Studio\data`). Также NSIS в `package.json` (`npm run dist:all`, только Windows/wine).
-**CI:** `.github/workflows/build-windows.yml` — windows-latest: приёмка → embedded Python → `npm ci` → portable+NSIS+dir → Inno Setup → artifacts → (опц.) Google Drive через `scripts/upload_drive.py` (секреты `GDRIVE_SA_JSON`, `GDRIVE_FOLDER_ID`).
+**CI:** `.github/workflows/build-windows.yml` — windows-latest: приёмка → embedded Python → `npm ci` → portable+NSIS+dir → Inno Setup → artifacts → (опц.) Google Drive через `scripts/upload_drive.py` (секреты `GOOGLE_SERVICE_ACCOUNT_JSON`, `DRIVE_FOLDER_ID`).

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Загрузка собранных exe в Google Drive через сервисный аккаунт (для CI).
 
-env: GDRIVE_SA_JSON — JSON ключ сервисного аккаунта (содержимое, не путь);
-     GDRIVE_FOLDER_ID — id папки Drive, расшаренной на e-mail сервисного аккаунта (Editor).
+env: GOOGLE_SERVICE_ACCOUNT_JSON — JSON ключ сервисного аккаунта (содержимое, не путь);
+     DRIVE_FOLDER_ID — id папки Drive, расшаренной на e-mail сервисного аккаунта (Editor).
 usage: python scripts/upload_drive.py desktop/dist/*.exe [--subfolder v0.5.0]
 Повторная загрузка файла с тем же именем обновляет его (новая ревизия), а не плодит дубли.
 """
@@ -20,9 +20,9 @@ def main() -> int:
     ap.add_argument("files", nargs="+")
     ap.add_argument("--subfolder", default="")
     a = ap.parse_args()
-    sa, folder = os.environ.get("GDRIVE_SA_JSON"), os.environ.get("GDRIVE_FOLDER_ID")
+    sa, folder = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON"), os.environ.get("DRIVE_FOLDER_ID")
     if not sa or not folder:
-        print("GDRIVE_SA_JSON / GDRIVE_FOLDER_ID не заданы — загрузка пропущена")
+        print("GOOGLE_SERVICE_ACCOUNT_JSON / DRIVE_FOLDER_ID не заданы — загрузка пропущена")
         return 0
     from google.oauth2 import service_account
     from googleapiclient.discovery import build

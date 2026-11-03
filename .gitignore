@@ -10,3 +10,9 @@ desktop/vendor/python-win/
 desktop/vendor/wheels/
 desktop/vendor/py-embed.zip
 *.alsproj
+venv/
+build/
+*.egg-info/
+.env
+Thumbs.db
+Desktop.ini
