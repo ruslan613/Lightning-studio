@@ -1,0 +1,207 @@
+{
+  "name": "ai-lighting-studio",
+  "version": "0.5.0",
+  "description": "AI Lighting Studio — десктоп-приложение (Electron + встроенный Python-оркестратор)",
+  "main": "main.js",
+  "author": "Gilil",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable --x64",
+    "dist:linux": "electron-builder --linux dir",
+    "dist:nsis": "electron-builder --win nsis --x64  # требует wine на Linux",
+    "screens": "ALS_SCREENSHOTS=./screens xvfb-run -a -s \"-screen 0 1600x1000x24\" electron . --no-sandbox --use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader",
+    "dist:all": "electron-builder --win portable nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "33.4.11",
+    "electron-builder": "^25.1.8",
+    "three": "^0.170.0"
+  },
+  "build": {
+    "appId": "com.gilil.ailightingstudio",
+    "productName": "AI Lighting Studio",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      "renderer/**/*",
+      "build/icon.png",
+      "build/icon.ico"
+    ],
+    "extraResources": [
+      {
+        "from": "../app",
+        "to": "als/app",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../orchestrator",
+        "to": "als/orchestrator",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../design",
+        "to": "als/design",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../cad3d",
+        "to": "als/cad3d",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../engineering",
+        "to": "als/engineering",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../viz",
+        "to": "als/viz",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../visualization",
+        "to": "als/visualization",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../catalogs",
+        "to": "als/catalogs",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../sales",
+        "to": "als/sales",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../automation",
+        "to": "als/automation",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../shared",
+        "to": "als/shared",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../projects",
+        "to": "als/projects",
+        "filter": [
+          "**/*.py",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../requirements.txt",
+        "to": "als/requirements.txt"
+      },
+      {
+        "from": "../data/samples",
+        "to": "als/data/samples"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signAndEditExecutable": false,
+      "extraResources": [
+        {
+          "from": "vendor/python-win",
+          "to": "python",
+          "filter": [
+            "**/*",
+            "!**/__pycache__/**"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "AI-Lighting-Studio-${version}-portable.exe"
+    },
+    "nsis": {
+      "artifactName": "AI-Lighting-Studio-${version}-setup.exe",
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "AI Lighting Studio",
+      "installerLanguages": [
+        "ru_RU",
+        "en_US"
+      ],
+      "language": "1049",
+      "multiLanguageInstaller": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "dir"
+      ],
+      "icon": "build/icon.png"
+    },
+    "fileAssociations": [
+      {
+        "ext": "alsproj",
+        "name": "AI Lighting Studio Project",
+        "description": "AI Lighting Studio project",
+        "icon": "build/icon.ico"
+      }
+    ]
+  },
+  "productName": "AI Lighting Studio"
+}

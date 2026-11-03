@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>AI Lighting Studio</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' als:; img-src 'self' als: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-src 'self' als: about:; child-src 'self' als:">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="brand"><span class="brand-mark">◎</span><div><div class="brand-name">AI Lighting Studio</div><div class="brand-sub">Gilil · оркестратор</div></div></div>
+    <button id="btnNew" class="btn btn-gold">＋ Новый проект</button>
+    <button id="btnImport" class="btn" style="margin-top:6px">⇩ Импорт .alsproj</button>
+    <div class="side-title">Проекты</div>
+    <ul id="projectList"></ul>
+    <div id="backendInfo" class="side-foot"></div>
+  </aside>
+  <main id="main">
+    <header id="topbar">
+      <div><h1 id="pTitle">Выберите проект</h1><div id="pMeta" class="muted"></div></div>
+      <div class="top-actions">
+        <span id="pStatus" class="badge"></span>
+        <button id="btnContinue" class="btn btn-gold hidden">▶ Продолжить</button>
+        <button id="btnRerun" class="btn hidden">↻ Перезапустить пайплайн</button>
+        <button id="btnFolder" class="btn hidden">📁 Папка проекта</button>
+        <button id="btnExport" class="btn hidden">⇪ Экспорт .alsproj</button>
+      </div>
+    </header>
+    <nav id="tabs"></nav>
+    <section id="content"><div class="empty">Создайте проект: опишите светильник обычным языком — оркестратор сам пройдёт дизайн → 3D → инженерию → визуализацию → каталог → продажи.</div></section>
+  </main>
+</div>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <h2>Новый проект</h2>
+    <label>Задача (обычным языком)</label>
+    <textarea id="nGoal" rows="4">Разработай люстру Baccarat Ø1200 H900 24 лампы латунь+хрусталь</textarea>
+    <div class="row2">
+      <div><label>Пайплайн</label>
+        <select id="nPipeline">
+          <option value="week4" selected>Неделя 4 — полный: дизайн → 3D → инженерия → viz → каталог → продажи</option>
+          <option value="week3">Неделя 3 — дизайн → 3D → инженерия → viz</option>
+          <option value="week2">Неделя 2 — дизайн → 3D</option>
+          <option value="full">Verify-цикл: ревью дизайна → DXF → паспорт → рендер → RFQ</option>
+        </select></div>
+      <div><label>Режим автономности</label>
+        <select id="nAutonomy">
+          <option value="full_auto" selected>Эксперт — полностью автономно</option>
+          <option value="confirm_key_points">Автономный — пауза на ключевых точках</option>
+          <option value="step_by_step">Помощник — пауза после каждого шага</option>
+        </select></div>
+    </div>
+    <label>Вход для инженерии (необязательно): фото / PDF / видео</label>
+    <div class="row-file"><button id="nPick" class="btn">Выбрать файл…</button><span id="nFile" class="muted">не выбран</span><button id="nClear" class="btn btn-sm hidden">✕</button></div>
+    <div class="modal-actions"><button id="nCancel" class="btn">Отмена</button><button id="nCreate" class="btn btn-gold">Создать и запустить</button></div>
+  </div>
+</div>
+<div id="vmodal" class="modal hidden">
+  <div class="modal-box">
+    <h2 id="vmTitle">Сохранить версию</h2>
+    <label id="vmLabel">Комментарий к версии</label>
+    <input id="vmInput" class="inp" type="text" placeholder="например: Ø1500, добавлен алебастр">
+    <div class="modal-actions"><button id="vmCancel" class="btn">Отмена</button><button id="vmOk" class="btn btn-gold">Сохранить</button></div>
+  </div>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+desktop/dist/
+dist/
+data/*
+!data/samples/
+desktop/vendor/python-win/
+desktop/vendor/wheels/
+desktop/vendor/py-embed.zip
+*.alsproj

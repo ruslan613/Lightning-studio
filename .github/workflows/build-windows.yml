@@ -1,0 +1,89 @@
+name: build-windows
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    env:
+      PY_EMBED_VERSION: "3.13.5"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Python deps + acceptance (Ф0 + неделя 4)
+        run: |
+          python -m venv .venv
+          .venv/Scripts/python -m pip install -r requirements.txt
+          .venv/Scripts/python scripts/f0_accept.py
+          .venv/Scripts/python scripts/week4_accept.py || echo "::warning::week4_accept (Linux-пути) — см. лог"
+
+      - name: Prepare embedded Python (vendor/python-win)
+        working-directory: desktop
+        run: |
+          mkdir -p vendor && cd vendor
+          curl -sSLo py-embed.zip "https://www.python.org/ftp/python/${PY_EMBED_VERSION}/python-${PY_EMBED_VERSION}-embed-amd64.zip"
+          rm -rf python-win && mkdir python-win && (cd python-win && unzip -q ../py-embed.zip)
+          python -m pip install --no-compile --only-binary=:all: --target python-win/Lib/site-packages -r ../../requirements.txt
+          printf 'python313.zip\n.\nLib/site-packages\n../als\nimport site\n' > python-win/python313._pth
+          find python-win/Lib/site-packages -type d \( -name tests -o -name __pycache__ \) -prune -exec rm -rf {} +
+          rm -rf python-win/Lib/site-packages/bin
+          python-win/python.exe -c "import ezdxf, openpyxl, PIL, pydantic; print('embedded python ok')"
+
+      - name: npm ci
+        working-directory: desktop
+        run: npm ci
+
+      - name: electron-builder (portable + NSIS + unpacked dir)
+        working-directory: desktop
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: npx electron-builder --win portable nsis dir --x64 --publish never
+
+      - name: Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          $ver = (Get-Content desktop/package.json | ConvertFrom-Json).version
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DAppVersion=$ver" desktop\installer\als.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Smoke test (backend in embedded python)
+        working-directory: desktop/dist/win-unpacked/resources/als
+        run: |
+          printf '{"id":1,"cmd":"info"}\n' | ../python/python.exe -m app | head -c 400
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ai-lighting-studio-windows
+          path: |
+            desktop/dist/*.exe
+            desktop/dist/*.blockmap
+          if-no-files-found: error
+
+      - name: Upload to Google Drive (optional)
+        env:
+          GDRIVE_SA_JSON: ${{ secrets.GDRIVE_SA_JSON }}
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
+        run: |
+          if [ -z "$GDRIVE_SA_JSON" ]; then echo "Drive secrets not set — skip"; exit 0; fi
+          python -m pip install google-api-python-client google-auth
+          python scripts/upload_drive.py desktop/dist/*.exe --subfolder "${GITHUB_REF_NAME}"

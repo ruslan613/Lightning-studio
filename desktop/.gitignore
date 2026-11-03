@@ -1,0 +1,4 @@
+node_modules/
+dist/
+vendor/py-embed.zip
+vendor/wheels/
