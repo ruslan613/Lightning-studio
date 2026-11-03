@@ -24,10 +24,7 @@ _force_utf8_stdio()
 
 ROOT = Path(__file__).resolve().parent.parent
 # Cross-platform venv interpreter (Windows: Scripts\python.exe, POSIX: bin/python)
-if os.name == "nt":
-    PY = ROOT / ".venv" / "Scripts" / "python.exe"
-else:
-    PY = ROOT / ".venv" / "bin" / "python"
+PY = ROOT / ".venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
 DB = ROOT / "data" / "projects.db"
 GOAL = "Разработай люстру Baccarat Ø1200 H900 24 лампы латунь+хрусталь"
 
